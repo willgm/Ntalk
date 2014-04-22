@@ -1,0 +1,8 @@
+
+bin
+build
+tmp
+.idea
+node_modules
+public/libs
+npm-debug.log

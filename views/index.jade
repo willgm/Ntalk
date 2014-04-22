@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h4 Bem-vindo!
+  br
+  form(action='/login', method='post').form-inline
+    input(type='text', name='nome', placeholder='Seu nome').form-control
+    br
+    br
+    input(type='text', name='email', placeholder='Seu e-mail').form-control
+    br
+    br
+    button(type='submit').btn.btn-primary Entrar

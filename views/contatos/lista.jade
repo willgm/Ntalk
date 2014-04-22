@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+
+  unless contatos.length
+    h4 Você ainda não tem nenhum contato! =/
+
+  else
+    ul
+    each c in contatos
+      li #{c.nome} [ #{c.email} ]&nbsp;
+        a(href='/contatos/#{c.id}')
+          i.glyphicon.glyphicon-pencil
+
+  br
+  a(href='/contatos/novo').btn.btn-primary.btn-sm Novo Contato

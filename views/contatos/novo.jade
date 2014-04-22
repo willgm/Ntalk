@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+  h4 Novo Contato:
+  form(action='/contatos', method='post').form-inline
+    input(type='text', name='contato[nome]', placeholder='Nome').form-control
+    br
+    br
+    input(type='text', name='contato[email]', placeholder='E-mail').form-control
+    br
+    br
+    button(type='submit').btn.btn-primary Inserir
