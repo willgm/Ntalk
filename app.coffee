@@ -7,6 +7,8 @@ session = require "express-session"
 load = require "express-load"
 bodyParser = require "body-parser"
 methodOverride = require "method-override"
+http = require "http"
+socketio = require "socket.io"
 
 app = express()
 app.set "views", path.join __dirname, "views"
@@ -19,6 +21,7 @@ app.use cookieParser()
 app.use session secret: 'por atena!'
 app.use express.static path.join __dirname, "public"
 app.use methodOverride()
+server = http.createServer app
 
 load 'middleware'
     .then 'controllers'
@@ -27,5 +30,10 @@ load 'middleware'
 
 app.middleware.errors()
 
-server = app.listen 3000, ->
+io = socketio.listen server
+io.on "connection", (client) ->
+    client.on 'send-chat', (data) ->
+        client.broadcast.emit 'recive-chat', "<b>#{data.nome}:</b> #{data.msg}<br>"
+
+server.listen 3000, ->
     console.log "Running at localhost:#{server.address().port}"

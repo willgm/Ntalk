@@ -1,0 +1,28 @@
+extends layout
+
+block script
+  script(src="/libs/socket.io-client/dist/socket.io.js")
+  script.
+    var socket = io.connect('http://localhost:3000'),
+        chat = $("#chat"),
+        nome = $("#nome"),
+        msg = $("#msg");
+
+    chatMsg = function(msg) { chat.append(msg); };
+
+    socket.on('recive-chat', chatMsg);
+
+    $('form').submit(function(e) {
+        chatMsg("<b>"+nome.val()+":</b> "+msg.val()+"<br>")
+        socket.emit('send-chat', {nome: nome.val(), msg: msg.val()});
+        msg.val('');
+        e.preventDefault();
+    });
+
+block content
+  h4 Chat!
+  pre#chat Bem vindo!
+    br
+  form
+    input(type="hidden" id="nome" value=usuario)
+    input(type="text" id="msg" placeholder="mensagem...").form-control
