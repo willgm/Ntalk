@@ -2,22 +2,21 @@ extends layout
 
 block script
   script(src="/socket.io/socket.io.js")
-  script.
-    var socket = io.connect('http://localhost:3000'),
-        chat = $("#chat"),
-        nome = $("#nome"),
-        msg = $("#msg");
+  script(type="text/coffeescript").
+    socket = io.connect 'http://localhost:3000'
+    chat = $ "#chat"
+    nome = $ "#nome"
+    msg = $ "#msg"
 
-    chatMsg = function(msg) { chat.append(msg); };
+    chatMsg = (msg) -> chat.append msg
 
-    socket.on('recive-chat', chatMsg);
+    socket.on 'recive-chat', chatMsg
 
-    $('form').submit(function(e) {
-        chatMsg("<b>"+nome.val()+":</b> "+msg.val()+"<br>")
-        socket.emit('send-chat', {nome: nome.val(), msg: msg.val()});
-        msg.val('');
-        e.preventDefault();
-    });
+    $('form').submit (e) ->
+        e.preventDefault()
+        chatMsg "<b>\#{nome.val()}:</b> \#{msg.val()}<br>"
+        socket.emit 'send-chat', nome: nome.val(), msg: msg.val()
+        msg.val ''
 
 block content
   h4 Chat!
