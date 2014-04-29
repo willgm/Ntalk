@@ -5,8 +5,8 @@ block script
   script(type="text/coffeescript").
     socket = io.connect 'http://localhost:3000'
     chat = $ "#chat"
-    nome = $ "#nome"
     msg = $ "#msg"
+    user = "#{usuario}"
 
     chatMsg = (msg) -> chat.append msg
 
@@ -14,8 +14,8 @@ block script
 
     $('form').submit (e) ->
         e.preventDefault()
-        chatMsg "<b>\#{nome.val()}:</b> \#{msg.val()}<br>"
-        socket.emit 'send-chat', nome: nome.val(), msg: msg.val()
+        chatMsg "<b>\#{user}:</b> \#{msg.val()}<br>"
+        socket.emit 'send-chat', nome: user, msg: msg.val()
         msg.val ''
 
 block content
@@ -23,5 +23,4 @@ block content
   pre#chat Bem vindo!
     br
   form
-    input(type="hidden" id="nome" value=usuario)
     input(type="text" id="msg" placeholder="mensagem...").form-control
