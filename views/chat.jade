@@ -10,12 +10,12 @@ block script
 
     chatMsg = (msg) -> chat.append msg
 
-    socket.on 'recive-chat', chatMsg
+    socket.on 'recive-public-chat', chatMsg
 
     $('form').submit (e) ->
         e.preventDefault()
         chatMsg "<b>\#{user}:</b> \#{msg.val()}<br>"
-        socket.emit 'send-chat', nome: user, msg: msg.val()
+        socket.emit 'send-public-chat', msg.val()
         msg.val ''
 
 block content
