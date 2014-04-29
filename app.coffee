@@ -37,7 +37,6 @@ load 'middleware'
 app.middleware.errors()
 
 io = socketio.listen server
-
 io.set 'authorization', (data, accept) ->
     cookie data, {}, (err) ->
         sessionID = data.signedCookies[KEY]
@@ -48,11 +47,8 @@ io.set 'authorization', (data, accept) ->
                 data.session = session
                 accept null, true
 
-io.on "connection", (client) ->
-    usuario = client.handshake.session.usuario
-    client.on 'send-public-chat', (msg) ->
-        client.broadcast.emit 'recive-public-chat',
-            "<b>#{usuario.nome}:</b> #{msg}<br>"
+load 'sockets'
+    .into io
 
 server.listen 3000, ->
     console.log "Running at localhost:#{server.address().port}"
