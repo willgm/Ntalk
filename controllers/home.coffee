@@ -3,15 +3,17 @@ module.exports = (app) ->
     Usuario = app.models.usuario
 
     index: (req, res) ->
-        res.render "index", title: "CoffeeXpress"
+        login = req.param('login')
+        res.render "index",
+            login: login || {}
+            mensagem: if login then "nome e email são obrigatórios"
 
-    login: (req, res) ->
-        nome = req.param 'nome'
-        email = req.param 'email'
+    login: (req, res, next) ->
+        login = req.param 'login'
 
-        return res.redirect '/' unless nome and email
+        return next() unless login and login.nome and login.email
 
-        Usuario.findOne email: email
+        Usuario.findOne email: login.email
             .select 'nome email'
             .exec().then (usuario) ->
 
@@ -22,8 +24,8 @@ module.exports = (app) ->
                 return redirecionaContatos usuario if usuario
 
                 Usuario.create
-                    nome: nome
-                    email: email
+                    nome: login.nome
+                    email: login.email
                 .then redirecionaContatos
 
     logout: (req, res) ->

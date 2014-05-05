@@ -3,5 +3,5 @@ module.exports = (app) ->
     home = app.controllers.home
 
     app.get "/", home.index
-    app.post "/login", home.login
+    app.all "/login", home.login, home.index
     app.get "/logout", home.logout

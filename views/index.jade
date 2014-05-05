@@ -2,12 +2,15 @@ extends layout
 
 block content
   h4 Bem-vindo!
+  if mensagem
+    span(class="label label-info") #{mensagem}
+    br
   br
   form(action='/login', method='post').form-inline
-    input(type='text', name='nome', placeholder='Seu nome').form-control
+    input(type='text', name='login[nome]', placeholder='Seu nome', value=login.nome).form-control
     br
     br
-    input(type='text', name='email', placeholder='Seu e-mail').form-control
+    input(type='text', name='login[email]', placeholder='Seu e-mail', value=login.email).form-control
     br
     br
     button(type='submit').btn.btn-primary Entrar
