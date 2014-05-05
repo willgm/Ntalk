@@ -1,30 +1,42 @@
-module.exports = ->
+module.exports = (app) ->
+
+    Usuario = app.models.usuario
 
     listar: (req, res) ->
-        res.render "contatos/lista",
-            contatos: req.session.usuario.contatos
+        Usuario.findById req.session.usuario._id, (err, usuario) ->
+            res.render "contatos/lista",
+                contatos: usuario.contatos
 
-    visualizar: (req, res) ->
-        contato = req.session.usuario.contatos[req.param 'id']
-        if contato
-            res.render "contatos/edicao", contato: contato
-        else
-            res.render "contatos/novo"
+    prepararNovo: (req, res) ->
+        res.render "contatos/novo"
 
-    inserir: (req, res) ->
+    prepararEdicao: (req, res) ->
+        Usuario.findById req.session.usuario._id, (err, usuario) ->
+            res.render "contatos/edicao",
+                contato: usuario.contatos.id req.param 'id'
+
+    inserir: (req, res, next) ->
         contatos = req.session.usuario.contatos
-        novo = req.param 'contato'
-        novo.id = contatos.length
-        contatos.push novo
-        res.redirect '/contatos'
+        Usuario.findById req.session.usuario._id, (err, usuario) ->
+            usuario.contatos.push req.param 'contato'
+            usuario.save (err) ->
+                return next err if err
+                res.redirect '/contatos'
 
-    editar: (req, res) ->
-        original = req.session.usuario.contatos[req.param 'id']
-        edicao = req.param 'contato'
-        original.nome = edicao.nome
-        original.email = edicao.email
-        res.redirect '/contatos'
+    editar: (req, res, next) ->
+        Usuario.findById req.session.usuario._id, (err, usuario) ->
+            contato = usuario.contatos.id req.param 'id'
+            edicao = req.param 'contato'
+            contato.nome = edicao.nome
+            contato.email = edicao.email
+            usuario.save (err) ->
+                return next err if err
+                res.redirect '/contatos'
 
-    excluir: (req, res) ->
-        req.session.usuario.contatos.splice req.param 'id', 1
-        res.redirect '/contatos'
+    excluir: (req, res, next) ->
+        Usuario.findById req.session.usuario._id, (err, usuario) ->
+            usuario.contatos.id req.param 'id'
+                .remove()
+            usuario.save (err) ->
+                return next err if err
+                res.redirect '/contatos'

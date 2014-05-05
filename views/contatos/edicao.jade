@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   h4 Edição de Contato:
-  form(action='/contatos/'+contato.id, method='post', id='editar').form-inline
+  form(action='/contatos/'+contato._id, method='post', id='editar').form-inline
     input(type='hidden', name='_method', value='put')
     input(type='text', name='contato[nome]', placeholder='Nome', value=contato.nome).form-control
     br

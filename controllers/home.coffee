@@ -1,5 +1,7 @@
 module.exports = (app) ->
 
+    Usuario = app.models.usuario
+
     index: (req, res) ->
         res.render "index", title: "CoffeeXpress"
 
@@ -7,14 +9,22 @@ module.exports = (app) ->
         nome = req.param 'nome'
         email = req.param 'email'
 
-        if nome and email
-            req.session.usuario =
-                nome: nome
-                email: email
-                contatos: []
-            res.redirect '/contatos'
-        else
-            res.redirect '/'
+        return res.redirect '/' unless nome and email
+
+        Usuario.findOne email: email
+            .select 'nome email'
+            .exec().then (usuario) ->
+
+                redirecionaContatos = (usuario) ->
+                    req.session.usuario = usuario
+                    res.redirect '/contatos'
+
+                return redirecionaContatos usuario if usuario
+
+                Usuario.create
+                    nome: nome
+                    email: email
+                .then redirecionaContatos
 
     logout: (req, res) ->
         req.session.destroy()

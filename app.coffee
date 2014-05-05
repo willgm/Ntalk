@@ -9,6 +9,7 @@ bodyParser = require "body-parser"
 methodOverride = require "method-override"
 http = require "http"
 socketio = require "socket.io"
+mongo = require 'mongoose'
 
 KEY = 'cdz'
 SECRET = 'por atena!'
@@ -29,7 +30,10 @@ app.use express.static path.join __dirname, "public"
 app.use methodOverride()
 server = http.createServer app
 
+app.db = mongo.connect 'mongodb://localhost/ntalk'
+
 load 'middleware'
+    .then 'models'
     .then 'controllers'
     .then 'routes'
     .into app

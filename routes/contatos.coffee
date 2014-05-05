@@ -8,8 +8,11 @@ module.exports = (app) ->
         .get contatos.listar
         .post contatos.inserir
 
+    app.get "/contatos/novo",
+        auth, contatos.prepararNovo
+
     app.route "/contatos/:id"
         .all auth
-        .get contatos.visualizar
+        .get contatos.prepararEdicao
         .put contatos.editar
         .delete contatos.excluir
