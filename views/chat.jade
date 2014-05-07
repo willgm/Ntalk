@@ -8,19 +8,18 @@ block script
     msg = $ "#msg"
     user = "#{usuario}"
 
-    chatMsg = (msg) -> chat.append msg
+    chatMsg = (msg) -> chat.append "\#{msg}<br>"
 
     socket.on 'recive-public-chat', chatMsg
 
     $('form').submit (e) ->
         e.preventDefault()
-        chatMsg "<b>\#{user}:</b> \#{msg.val()}<br>"
+        chatMsg "<b>\#{user}:</b> \#{msg.val()}"
         socket.emit 'send-public-chat', msg.val()
         msg.val ''
 
 block content
   h4 Chat!
-  pre#chat Bem vindo!
-    br
+  pre#chat
   form
     input(type="text" id="msg" placeholder="mensagem...").form-control
