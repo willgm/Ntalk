@@ -10,12 +10,13 @@ methodOverride = require "method-override"
 http = require "http"
 socketio = require "socket.io"
 mongo = require 'mongoose'
+RedisStore = require('connect-redis')(session)
 
 KEY = 'cdz'
 SECRET = 'por atena!'
 
 cookie = cookieParser SECRET
-sessionStore = new session.MemoryStore()
+sessionStore = new RedisStore
 
 app = express()
 app.set "views", path.join __dirname, "views"
@@ -41,6 +42,8 @@ load 'middleware'
 app.middleware.errors()
 
 io = socketio.listen server
+
+io.set 'store', new socketio.RedisStore
 io.set 'authorization', (data, accept) ->
     cookie data, {}, (err) ->
         sessionID = data.signedCookies[KEY]
