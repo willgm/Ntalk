@@ -1,9 +1,11 @@
 {
-  "name": "CoffeeXpress",
+  "name": "NTalk",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "postinstall": "bower install",
+    "prestart": "npm install",
+    "start": "node cluster"
   },
   "dependencies": {
     "body-parser": "1.0.0",
