@@ -11,6 +11,7 @@ http = require "http"
 socketio = require "socket.io"
 mongo = require 'mongoose'
 morgan = require 'morgan'
+compress = require 'compression'
 RedisStore = require('connect-redis')(session)
 
 KEY = 'cdz'
@@ -21,6 +22,7 @@ sessionStore = new RedisStore
 
 app = express()
 app.use morgan()
+app.use compress()
 app.set "views", path.join __dirname, "views"
 app.set "view engine", "jade"
 app.use favicon()
