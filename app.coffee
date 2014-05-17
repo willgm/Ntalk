@@ -48,6 +48,7 @@ app.middleware.errors()
 io = socketio.listen server
 
 io.set 'log level', 1
+io.enable 'browser client minification'
 io.set 'store', new socketio.RedisStore
 io.set 'authorization', (data, accept) ->
     cookie data, {}, (err) ->
