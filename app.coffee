@@ -10,6 +10,7 @@ methodOverride = require "method-override"
 http = require "http"
 socketio = require "socket.io"
 mongo = require 'mongoose'
+morgan = require 'morgan'
 RedisStore = require('connect-redis')(session)
 
 KEY = 'cdz'
@@ -19,6 +20,7 @@ cookie = cookieParser SECRET
 sessionStore = new RedisStore
 
 app = express()
+app.use morgan()
 app.set "views", path.join __dirname, "views"
 app.set "view engine", "jade"
 app.use favicon()
@@ -43,6 +45,7 @@ app.middleware.errors()
 
 io = socketio.listen server
 
+io.set 'log level', 1
 io.set 'store', new socketio.RedisStore
 io.set 'authorization', (data, accept) ->
     cookie data, {}, (err) ->
