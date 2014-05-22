@@ -1,6 +1,6 @@
 module.exports = (io) ->
 
-    redis = require('redis').createClient()
+    redis = require('../redisman').createClient()
 
     io.on "connection", (client) ->
         usuario = client.handshake.session.usuario

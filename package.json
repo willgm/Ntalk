@@ -8,6 +8,8 @@
     "start": "node cluster"
   },
   "dependencies": {
+    "bower": "1.3.2",
+    "coffee-script": "1.7.1",
     "body-parser": "1.0.0",
     "cookie-parser": "1.0.1",
     "debug": "0.7.4",
@@ -23,9 +25,5 @@
     "redis": "0.10.1",
     "connect-redis": "2.0.0",
     "compression": "1.0.2"
-  },
-  "devDependencies": {
-    "coffee-script": "1.7.1",
-    "bower": "1.3.2"
   }
 }

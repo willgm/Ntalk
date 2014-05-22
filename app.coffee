@@ -12,13 +12,15 @@ socketio = require "socket.io"
 mongo = require 'mongoose'
 morgan = require 'morgan'
 compress = require 'compression'
-RedisStore = require('connect-redis')(session)
+redisman = require './redisman'
 
 KEY = 'cdz'
 SECRET = 'por atena!'
 
 cookie = cookieParser SECRET
-sessionStore = new RedisStore
+sessionStore = redisman.createSessionStore session
+mongoUri = process.env.MONGOLAB_URI or process.env.MONGOHQ_URL or 'mongodb://localhost/ntalk'
+port = process.env.PORT || 5000
 
 app = express()
 app.use morgan()
@@ -35,7 +37,7 @@ app.use express.static path.join __dirname, "public"
 app.use methodOverride()
 server = http.createServer app
 
-app.db = mongo.connect 'mongodb://localhost/ntalk'
+app.db = mongo.connect mongoUri
 
 load 'middleware'
     .then 'models'
@@ -49,7 +51,7 @@ io = socketio.listen server
 
 io.set 'log level', 1
 io.enable 'browser client minification'
-io.set 'store', new socketio.RedisStore
+io.set 'store', redisman.createSocketioStore()
 io.set 'authorization', (data, accept) ->
     cookie data, {}, (err) ->
         sessionID = data.signedCookies[KEY]
@@ -63,5 +65,5 @@ io.set 'authorization', (data, accept) ->
 load 'sockets'
     .into io
 
-server.listen 3000, ->
-    console.log "Running at localhost:#{server.address().port}"
+server.listen port, ->
+    console.log "Running at #{port}"
